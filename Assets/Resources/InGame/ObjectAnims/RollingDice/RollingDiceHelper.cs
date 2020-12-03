@@ -30,7 +30,13 @@ public class RollingDiceHelper : MonoBehaviour
     {
         if (controller)
         {
+            //Do reset the value to 0 for looping the rolling animation
+            controller.SetInteger("Result", 0);
+
+            //Trigger Looping animation
             controller.SetTrigger("StartAnima");
         }
     }
+
+    
 }

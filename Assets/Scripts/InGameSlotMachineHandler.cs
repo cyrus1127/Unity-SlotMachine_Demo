@@ -1,6 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InGameSlotMachineHandler : MonoBehaviour
 {
@@ -15,18 +15,27 @@ public class InGameSlotMachineHandler : MonoBehaviour
     public float speed = 1.0f;
     private Vector3 targetPos;
 
+    public Text txt_result;
+
     // Start is called before the first frame update
     void Start()
     {
         DoMoveOut();
 
-        rewardedResult.Add("1,1,1");
-        rewardedResult.Add("2,2,2");
-        rewardedResult.Add("3,3,3");
-        rewardedResult.Add("4,4,4");
-        rewardedResult.Add("5,5,5");
-        rewardedResult.Add("6,6,6");
+        int[] slotResultCountingBox = new int[slot.Count];
 
+        if (rewardedResult.Count == 0) {
+            Debug.Log("auto generate the awarded result");
+            for (int i = 0; i < numValForEashSlot; i++)
+            {
+                for (int si = 0; si < slot.Count; si++) { slotResultCountingBox[si] = i + 1; }
+
+                string str_r = string.Join(",", slotResultCountingBox);
+                rewardedResult.Add(str_r);
+            }
+        }
+        
+        //pre-set the reward Result
         results.AddRange(rewardedResult);
 
         int maxNumResult = (int)( ((float)rewardedResult.Count / rewardChancePerc) - rewardedResult.Count);
@@ -35,7 +44,6 @@ public class InGameSlotMachineHandler : MonoBehaviour
         Debug.Log("maxNumResult ? " + maxNumResult);
 
         //Do generate all results
-        int[] slotResultCountingBox = new int[slot.Count];
         List<string> maxResults = new List<string>();
         for (int i = 0; i < maxCombination; i++) {
             for (int si = 0; si < slot.Count; si++) {
@@ -118,6 +126,16 @@ public class InGameSlotMachineHandler : MonoBehaviour
                 }
                 else {
                     Debug.LogWarning("result ["+ idx + "] phase failed !");
+                }
+            }
+
+            if (txt_result != null) {
+                if (rewardedResult.Contains(str_result))
+                {
+                    txt_result.text = "You Awarded";
+                }
+                else {
+                    txt_result.text = "Get nothing.. Try again";
                 }
             }
         }
